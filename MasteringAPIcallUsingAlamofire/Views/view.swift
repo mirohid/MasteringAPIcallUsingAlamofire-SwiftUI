@@ -61,14 +61,14 @@ struct PostView: View {
 struct AddEditPostView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var title: String
-    @State private var body: String
+    @State private var postBody: String
     var viewModel: PostViewModel
     var post: Post?
 
     init(viewModel: PostViewModel, post: Post? = nil) {
         self.viewModel = viewModel
         _title = State(initialValue: post?.title ?? "")
-        _body = State(initialValue: post?.body ?? "")
+        _postBody = State(initialValue: post?.body ?? "")
     }
 
     var body: some View {
@@ -76,7 +76,7 @@ struct AddEditPostView: View {
             Form {
                 Section(header: Text(post == nil ? "New Post" : "Edit Post")) {
                     TextField("Title", text: $title)
-                    TextField("Body", text: $body)
+                    TextField("Body", text: $postBody)
                 }
                 Button(action: savePost) {
                     Text(post == nil ? "Add Post" : "Save Changes")
@@ -99,11 +99,11 @@ struct AddEditPostView: View {
     }
 
     private func savePost() {
-        guard !title.isEmpty, !body.isEmpty else { return }
+        guard !title.isEmpty, !postBody.isEmpty else { return }
         if let post = post {
-            viewModel.updatePost(postId: post.id, title: title, body: body)
+            viewModel.updatePost(postId: post.id, title: title, body: postBody)
         } else {
-            viewModel.createPost(title: title, body: body)
+            viewModel.createPost(title: title, body: postBody)
         }
         presentationMode.wrappedValue.dismiss()
     }
